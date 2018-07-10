@@ -28,10 +28,22 @@ public class CSVRowValueDeduper {
         CSVParser csvParser = new CSVParser();
         if (args.length == 0) {
             System.out.println("The CSV Duplicate Remover requieres two arguments 'input Path' and 'output path'");
+            System.out.println("As a third optional input you may specify the value separator. Take care to escape in " +
+                    "this value correctly in your cli'");
         }
-        if (args.length >= 2) {
+        if (args.length == 2) {
             csvParser.handleFile(args[0], args[1]);
+        }
 
+        if (args.length == 3) {
+            String separator = args[2];
+
+            CSVParser parser = new CSVParser(separator.charAt(0));
+            parser.handleFile(args[0], args[1]);
+        }
+
+        if (args.length > 3) {
+            System.out.println("Only up to three parameters are supported (inputPath, outputPath, separator)");
         }
 
     }

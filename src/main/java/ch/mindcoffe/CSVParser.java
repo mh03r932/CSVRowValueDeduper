@@ -30,14 +30,21 @@ import java.util.Set;
 public class CSVParser {
 
 
-    CSVParser() {
+    private CSVFormat format;
+
+    public CSVParser() {
+        this.format = CSVFormat.EXCEL;
+    }
+
+    public CSVParser(char separator) {
+        this.format = CSVFormat.DEFAULT.withDelimiter(separator);
     }
 
     void handleFile(String fileInPath, String fileOutPath) throws IOException {
 
-        try (CSVPrinter csvPrinter = CSVFormat.DEFAULT.print(new File(fileOutPath), Charset.defaultCharset())) {
+        try (CSVPrinter csvPrinter = format.print(new File(fileOutPath), Charset.defaultCharset())) {
             try (Reader in = new FileReader(fileInPath)) {
-                Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+                Iterable<CSVRecord> records = format.parse(in);
                 for (CSVRecord record : records) {
                     Set<String> rowWithoutDups = this.removeDuplicatesFromRecord(record);
                     this.writeAsOutAsCSV(rowWithoutDups, csvPrinter);
